@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class Movement : MonoBehaviour
 {
     private Rigidbody _rocketRigidBody;
+    private AudioSource _rocketAudioSource;
 
     [SerializeField] 
     private float forwardThrust = 1000f;
@@ -13,13 +11,12 @@ public class Movement : MonoBehaviour
     [SerializeField] 
     private float rotationThrust = 100f;
     
-    // Start is called before the first frame update
     private void Start()
     {
         _rocketRigidBody = GetComponent<Rigidbody>();
+        _rocketAudioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         ProcessThrust();
@@ -30,7 +27,17 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
+            if (!_rocketAudioSource.isPlaying)
+            {
+                _rocketAudioSource.Play();
+            }
+            
             _rocketRigidBody.AddRelativeForce(Vector3.up * forwardThrust * Time.deltaTime);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            _rocketAudioSource.Stop();
         }
     }
 
